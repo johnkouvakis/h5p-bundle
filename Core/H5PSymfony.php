@@ -589,6 +589,7 @@ class H5PSymfony implements \H5PFrameworkInterface
         $content->setParameters($paramsString);
         $content->setDisabledFeatures($contentData['disable']);
         $content->setFilteredParameters(null);
+        $content->setTitle($title);
         $this->manager->persist($content);
         $this->manager->flush();
         return $content->getId();
