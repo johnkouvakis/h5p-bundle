@@ -23,6 +23,12 @@ class Content
      */
     private ?Library $library;
 
+    #[ORM\Column(name: "title", type: "string", length: 255)]
+    /**
+     * @var string
+     */
+    private ?string $Title;
+
     /**
      * @var string|null
      */
@@ -75,6 +81,22 @@ class Content
     public function setLibrary(Library $library): self
     {
         $this->library = $library;
+        return $this;
+    }
+    /**
+     * @return string
+     */
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+    /**
+     * @param string $parameters
+     * @return self
+     */
+    public function setTitle(string title): self
+    {
+        $this->title = title;
         return $this;
     }
     /**
