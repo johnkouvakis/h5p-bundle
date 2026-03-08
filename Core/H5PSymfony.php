@@ -580,10 +580,13 @@ class H5PSymfony implements \H5PFrameworkInterface
 
     private function storeContent($contentData, Content $content)
     {
+        $paramsString = str_replace('#tmp', '', $contentData['params']);
+        $paramsJSON = json_decode($paramsString, true);
+        $title = $paramsJSON['metadata']['title'] ?? $paramsJSON['title'] ?? null;
         $library = $this->manager->getRepository('Studit\H5PBundle\Entity\Library')
             ->find($contentData['library']['libraryId']);
         $content->setLibrary($library);
-        $content->setParameters(str_replace('#tmp', '', $contentData['params']));
+        $content->setParameters($paramsString);
         $content->setDisabledFeatures($contentData['disable']);
         $content->setFilteredParameters(null);
         $this->manager->persist($content);
