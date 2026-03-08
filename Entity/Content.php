@@ -27,7 +27,7 @@ class Content
     /**
      * @var string
      */
-    private ?string $Title;
+    private ?string $title;
 
     /**
      * @var string|null
