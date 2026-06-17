@@ -49,6 +49,8 @@ class H5pBundleIncludeAssetsCommand extends Command
         //call service
         $toDir = $projectDir . '/public/bundles/studith5p/h5p/';
 
+        if ($copy) $this->createDirectories($toDir);
+
         $coreSubDir = "h5p-core/";
         $coreDirs = ["fonts", "images", "js", "styles"];
         $this->createFiles($fromDir, $toDir, $coreSubDir, $coreDirs, $copy);
@@ -58,15 +60,23 @@ class H5pBundleIncludeAssetsCommand extends Command
         $this->createFiles($fromDir, $toDir, $editorSubDir, $editorDirs, $copy);
     }
 
+    private function createDirectories($toDir) {
+
+    }
+
     private function createFiles(string $fromDir, string $toDir, string $subDir, array $subDirs, bool $copy): void
     {
         foreach ($subDirs as $dir) {
             $src = $fromDir . $subDir . $dir;
             $dist = $toDir . $subDir . $dir;
 
-            $copy
-                ? $this->recurseCopy($src, $dist)
-                : symlink($src, $dist);
+            try {
+                $copy
+                    ? $this->recurseCopy($src, $dist)
+                    : symlink($src, $dist);
+            } catch (\Exception $ex) {
+                echo "Could not copy " . $src . " to " . $dist . "\n";
+            }
         }
     }
 
@@ -74,7 +84,10 @@ class H5pBundleIncludeAssetsCommand extends Command
     {
         $dir = opendir($src);
         // Restrict the permission to 0750 not upper
-        @mkdir($dst, 0750);
+        if (!is_dir($dst)) {
+            mkdir($dst, 0750, true); 
+            chmod($dst, 0750); // Forces the exact 0750 permissions
+        }
         while (false !== ($file = readdir($dir))) {
             if (($file != '.') && ($file != '..')) {
                 if (is_dir($src . '/' . $file)) {
