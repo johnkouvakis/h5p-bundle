@@ -43,13 +43,13 @@ class H5pBundleIncludeAssetsCommand extends Command
     {
         $projectDir = $this->appKernel->getProjectDir();
 
+        $pluginDir = $projectDir . "/vendor/jorisdugue/h5p-bundle/public/h5p/";
+
         //get dir of vendor H5P
         $fromDir = $projectDir . "/vendor/h5p/";
 
         //call service
         $toDir = $projectDir . '/public/bundles/studith5p/h5p/';
-
-        if ($copy) $this->createDirectories($toDir);
 
         $coreSubDir = "h5p-core/";
         $coreDirs = ["fonts", "images", "js", "styles"];
@@ -58,10 +58,10 @@ class H5pBundleIncludeAssetsCommand extends Command
         $editorSubDir = "h5p-editor/";
         $editorDirs = ["ckeditor", "images", "language", "libs", "scripts", "styles"];
         $this->createFiles($fromDir, $toDir, $editorSubDir, $editorDirs, $copy);
-    }
 
-    private function createDirectories($toDir) {
-
+        $mainFileSrc = $pluginDir . 'symfony-h5p.js';
+        $mainFileDest = $toDir . 'symfony-h5p.js';
+        $copy ? copy($mainFileSrc, $mainFileDest) : symlink($mainFileSrc, $mainFileDest);
     }
 
     private function createFiles(string $fromDir, string $toDir, string $subDir, array $subDirs, bool $copy): void
